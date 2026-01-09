@@ -1,0 +1,4 @@
+services:
+  contiki:
+    build: .
+    image: mariuslang/contiki:latest

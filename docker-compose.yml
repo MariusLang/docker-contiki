@@ -1,10 +1,7 @@
 services:
   contiki:
-    build: .
+    image: mariuslang/contiki:latest
     environment:
       - DISPLAY=host.docker.internal:0
     volumes:
       - "./src:/home/user/src"
-
-# macOS: docker compose up
-# Linux: docker compose -f docker-compose.linux.yml up

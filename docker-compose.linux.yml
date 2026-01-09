@@ -1,6 +1,6 @@
 services:
   contiki:
-    build: .
+    image: mariuslang/contiki:latest
     environment:
       - DISPLAY=${DISPLAY}
     volumes:

@@ -29,7 +29,7 @@ mkdir src
    ```
 5. Start Cooja:
    ```bash
-   docker compose up --build
+   docker compose up
    ```
 
 ### Linux (Debian/Ubuntu)
@@ -40,16 +40,25 @@ mkdir src
    ```
 2. Start Cooja:
    ```bash
-   docker compose -f docker-compose.linux.yml up --build
+   docker compose -f docker-compose.linux.yml up
    ```
 
-## Building for Different Architectures
+## Development
 
-The Docker image supports both ARM (Apple Silicon, etc.) and AMD64 (Intel/AMD) architectures.
+### Building from Source
 
 ```bash
-docker compose build
+docker compose -f docker-compose.build.yml build
+```
 
-# Build multi-platform image (requires Docker Buildx)
-docker buildx build --platform linux/amd64,linux/arm64 -t contiki .
+### Publishing to Docker Hub
+
+```bash
+# Create buildx builder (one-time setup)
+docker buildx create --name multiarch --driver docker-container --use
+
+# Build and push multi-platform image
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t mariuslang/contiki:latest \
+  --push .
 ```
