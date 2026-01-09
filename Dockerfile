@@ -26,9 +26,9 @@ RUN update-java-alternatives -s java-1.8.0-openjdk-${TARGETARCH}
 RUN mkdir /contiki && chmod 777 /contiki
 
 # Environment variables, based on https://github.com/contiki-ng/contiki-ng/blob/ea66afaa5777193494331d78d2570f954507ba92/tools/docker/Dockerfile
-ENV HOME /home/user
-ENV CONTIKI /contiki
-ENV COOJA ${CONTIKI}/tools/cooja
+ENV HOME=/home/user
+ENV CONTIKI=/contiki
+ENV COOJA=${CONTIKI}/tools/cooja
 ENV PATH="${HOME}:${PATH}"
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
