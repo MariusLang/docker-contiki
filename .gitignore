@@ -1,8 +1,21 @@
 .env
 
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Contiki build artifacts
 obj_sky/
 *.a
 *.map
 *.log
 symbols.c
 symbols.h
+
+# Source directory (mounted volume)
+src/

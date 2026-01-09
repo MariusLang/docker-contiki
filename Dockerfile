@@ -4,6 +4,9 @@ FROM ubuntu:20.04
 # Disable interactive prompts during installations with apt-get
 ENV DEBIAN_FRONTEND="noninteractive"
 
+# Architecture argument (automatically set by Docker during multi-platform builds)
+ARG TARGETARCH
+
 USER root
 
 RUN apt-get update
@@ -18,7 +21,7 @@ RUN apt-get install -y \
   openssh-server
 
 # Use Java 8 by default (for Cooja)
-RUN update-java-alternatives -s java-1.8.0-openjdk-amd64
+RUN update-java-alternatives -s java-1.8.0-openjdk-${TARGETARCH}
 
 RUN mkdir /contiki && chmod 777 /contiki
 
@@ -49,7 +52,8 @@ RUN service ssh start
 
 USER user
 
-RUN git clone --recursive --branch 3.0 git://github.com/contiki-os/contiki.git ${CONTIKI}
+RUN git clone --recursive --branch release-3-0 https://github.com/contiki-os/contiki.git ${CONTIKI}
+# COPY contiki ${CONTIKI}
 
 # Include temperature sensor in sky makefile
 RUN sed -i '3s;^;CONTIKI_TARGET_SOURCEFILES += temperature-sensor.c\n;' /contiki/platform/sky/Makefile.sky
@@ -61,8 +65,6 @@ RUN cd ${CONTIKI} && git apply cooja.patch && rm cooja.patch
 # Build Cooja
 RUN cd ${COOJA} && ant jar
 
-WORKDIR ${HOME}
+WORKDIR ${COOJA}
 
-EXPOSE 22
-
-CMD ["sudo", "/usr/sbin/sshd", "-D"]
+CMD ["ant", "run"]

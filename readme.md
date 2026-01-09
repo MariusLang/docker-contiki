@@ -1,23 +1,55 @@
 # docker-contiki
 
-[Contiki](https://github.com/contiki-os/contiki) Docker image for a university course on networked embedded systems. Supports msp430 (only) and simulations via Cooja.
+[Contiki](https://github.com/contiki-os/contiki) Docker image for a university course on networked embedded systems. Supports msp430 and simulations via Cooja.
 
-## How to use this
+## Prerequisites
 
-Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/).
-Afterwards, download [docker-compose.yml](/docker-compose.yml) (or, if you are using Linux, [docker-compose.linux.yml](/docker-compose.linux.yml), renaming it to `docker-compose.yml`) from this repo and create a `src` directory next to it (it will be mounted in the container at `/home/user/src`).
-Then run `docker-compose up -d` to start the `contiki` container.
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
+## Setup
 
-### On Linux
+1. Clone this repository
+2. Create a `src` directory (it will be mounted in the container at `/home/user/src`)
 
-When you run `docker-compose exec contiki cooja`, the Cooja GUI should open up.
+```bash
+mkdir src
+```
 
-To run a shell in the container, issue `docker-compose exec contiki bash`.
+## Running Cooja
 
-### On anything that doesn't natively support X11
+### macOS
 
-You may be able to use SSH with X Forwarding to access the Cooja GUI:
+1. Install and open [XQuartz](https://www.xquartz.org/)
+2. Go to **Preferences -> Security** and enable **"Allow connections from network clients"**
+3. Restart XQuartz
+4. Allow connections:
+   ```bash
+   xhost +localhost
+   ```
+5. Start Cooja:
+   ```bash
+   docker compose up --build
+   ```
 
-* From your host machine, ssh into the `contiki` container via `ssh -X user@localhost -p 2222` (the password is `user`)
-* Via ssh, run `cooja` in the container to start the Cooja simulator
+### Linux (Debian/Ubuntu)
+
+1. Allow X11 connections from Docker:
+   ```bash
+   xhost +local:docker
+   ```
+2. Start Cooja:
+   ```bash
+   docker compose -f docker-compose.linux.yml up --build
+   ```
+
+## Building for Different Architectures
+
+The Docker image supports both ARM (Apple Silicon, etc.) and AMD64 (Intel/AMD) architectures.
+
+```bash
+docker compose build
+
+# Build multi-platform image (requires Docker Buildx)
+docker buildx build --platform linux/amd64,linux/arm64 -t contiki .
+```
